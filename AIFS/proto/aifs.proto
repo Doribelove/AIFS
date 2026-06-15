@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package aifs.v1;
+
+message RequestContext {
+  string tenant_id = 1;
+  string job_id = 2;
+  string dataset_id = 3;
+  int32 priority = 4;
+  bool checkpoint = 5;
+}
+
+message ChunkLocation {
+  string chunk_id = 1;
+  string node_id = 2;
+  string tier = 3;
+  uint64 size = 4;
+  uint64 version = 5;
+}
+
+message FileMetadata {
+  string path = 1;
+  uint64 size = 2;
+  string owner_tenant = 3;
+  uint64 version = 4;
+  repeated ChunkLocation chunks = 5;
+}
+
+message DatasetEntry {
+  string path = 1;
+  uint64 size = 2;
+  string checksum = 3;
+  repeated string labels = 4;
+}
+
+message DatasetManifest {
+  string dataset_id = 1;
+  uint64 version = 2;
+  repeated DatasetEntry entries = 3;
+}
+
+message CreateFileRequest {
+  string path = 1;
+  uint64 size = 2;
+  RequestContext context = 3;
+}
+
+message CreateFileResponse {
+  FileMetadata metadata = 1;
+}
+
+message GetFileRequest {
+  string path = 1;
+  RequestContext context = 2;
+}
+
+message PutChunkRequest {
+  ChunkLocation location = 1;
+  bytes data = 2;
+  RequestContext context = 3;
+}
+
+message GetChunkRequest {
+  string chunk_id = 1;
+  RequestContext context = 2;
+}
+
+message GetChunkResponse {
+  bytes data = 1;
+}
+
+message RegisterManifestRequest {
+  DatasetManifest manifest = 1;
+  RequestContext context = 2;
+}
+
+message Empty {}
+
+service MetadataService {
+  rpc CreateFile(CreateFileRequest) returns (CreateFileResponse);
+  rpc GetFile(GetFileRequest) returns (CreateFileResponse);
+  rpc RegisterManifest(RegisterManifestRequest) returns (Empty);
+}
+
+service ChunkService {
+  rpc PutChunk(PutChunkRequest) returns (Empty);
+  rpc GetChunk(GetChunkRequest) returns (GetChunkResponse);
+}
+

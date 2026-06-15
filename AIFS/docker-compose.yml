@@ -1,0 +1,7 @@
+services:
+  aifs-demo:
+    build: .
+    volumes:
+      - ./data:/workspace/aifs/data
+    command: ["./build/aifs_demo"]
+
