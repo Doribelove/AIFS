@@ -14,11 +14,11 @@ std::vector<common::ChunkLocation> PlacementManager::PlanChunks(
     std::uint64_t file_size,
     const std::vector<std::string>& storage_nodes) const {
     std::vector<common::ChunkLocation> locations;
-    if (storage_nodes.empty() || file_size == 0) {
+    if (storage_nodes.empty() || file_size == 0 || chunk_size_ == 0 || replica_count_ <= 0) {
         return locations;
     }
 
-    const auto chunk_count = (file_size + chunk_size_ - 1) / chunk_size_;
+    const auto chunk_count = 1 + (file_size - 1) / chunk_size_;
     const auto replicas = std::min<int>(replica_count_, static_cast<int>(storage_nodes.size()));
     const auto hash = std::hash<std::string>{}(path);
 

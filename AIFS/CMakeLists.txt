@@ -51,4 +51,8 @@ if(AIFS_BUILD_TESTS)
     add_executable(aifs_cache_test tests/cache_test.cpp)
     target_link_libraries(aifs_cache_test PRIVATE aifs)
     add_test(NAME aifs_cache_test COMMAND aifs_cache_test)
+
+    add_executable(aifs_placement_test tests/placement_test.cpp)
+    target_link_libraries(aifs_placement_test PRIVATE aifs)
+    add_test(NAME aifs_placement_test COMMAND aifs_placement_test)
 endif()
