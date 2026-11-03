@@ -12,6 +12,10 @@ void CacheManager::Put(const std::string& key, std::string value) {
         entries_.erase(existing);
     }
 
+    if (value.size() > capacity_bytes_) {
+        return;
+    }
+
     used_bytes_ += value.size();
     lru_.push_front(key);
     entries_[key] = Entry{std::move(value), lru_.begin()};

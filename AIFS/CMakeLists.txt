@@ -47,4 +47,8 @@ if(AIFS_BUILD_TESTS)
     add_executable(aifs_basic_flow_test tests/basic_flow_test.cpp)
     target_link_libraries(aifs_basic_flow_test PRIVATE aifs)
     add_test(NAME aifs_basic_flow_test COMMAND aifs_basic_flow_test)
+
+    add_executable(aifs_cache_test tests/cache_test.cpp)
+    target_link_libraries(aifs_cache_test PRIVATE aifs)
+    add_test(NAME aifs_cache_test COMMAND aifs_cache_test)
 endif()
