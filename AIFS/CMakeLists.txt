@@ -55,4 +55,8 @@ if(AIFS_BUILD_TESTS)
     add_executable(aifs_placement_test tests/placement_test.cpp)
     target_link_libraries(aifs_placement_test PRIVATE aifs)
     add_test(NAME aifs_placement_test COMMAND aifs_placement_test)
+
+    add_executable(aifs_token_bucket_test tests/token_bucket_test.cpp)
+    target_link_libraries(aifs_token_bucket_test PRIVATE aifs)
+    add_test(NAME aifs_token_bucket_test COMMAND aifs_token_bucket_test)
 endif()
