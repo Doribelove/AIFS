@@ -10,6 +10,10 @@ namespace aifs::client {
 class CacheManager {
 public:
     explicit CacheManager(std::size_t capacity_bytes);
+    CacheManager(const CacheManager& other);
+    CacheManager& operator=(const CacheManager& other);
+    CacheManager(CacheManager&& other) noexcept;
+    CacheManager& operator=(CacheManager&& other) noexcept;
 
     void Put(const std::string& key, std::string value);
     std::optional<std::string> Get(const std::string& key);
@@ -23,6 +27,7 @@ private:
     };
 
     void EvictIfNeeded();
+    void Swap(CacheManager& other) noexcept;
 
     std::size_t capacity_bytes_;
     std::size_t used_bytes_ = 0;

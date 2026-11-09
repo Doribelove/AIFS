@@ -1,8 +1,49 @@
 #include "aifs/client/cache_manager.h"
 
+#include <utility>
+
 namespace aifs::client {
 
 CacheManager::CacheManager(std::size_t capacity_bytes) : capacity_bytes_(capacity_bytes) {}
+
+CacheManager::CacheManager(const CacheManager& other)
+    : capacity_bytes_(other.capacity_bytes_),
+      used_bytes_(other.used_bytes_),
+      lru_(other.lru_),
+      entries_(other.entries_) {
+    // Copied entries must refer to this cache's LRU nodes.
+    for (auto it = lru_.begin(); it != lru_.end(); ++it) {
+        entries_.at(*it).order_it = it;
+    }
+}
+
+CacheManager& CacheManager::operator=(const CacheManager& other) {
+    if (this != &other) {
+        CacheManager copy(other);
+        Swap(copy);
+    }
+    return *this;
+}
+
+CacheManager::CacheManager(CacheManager&& other) noexcept
+    : CacheManager(other.capacity_bytes_) {
+    Swap(other);
+}
+
+CacheManager& CacheManager::operator=(CacheManager&& other) noexcept {
+    if (this != &other) {
+        CacheManager moved(std::move(other));
+        Swap(moved);
+    }
+    return *this;
+}
+
+void CacheManager::Swap(CacheManager& other) noexcept {
+    std::swap(capacity_bytes_, other.capacity_bytes_);
+    std::swap(used_bytes_, other.used_bytes_);
+    lru_.swap(other.lru_);
+    entries_.swap(other.entries_);
+}
 
 void CacheManager::Put(const std::string& key, std::string value) {
     auto existing = entries_.find(key);
