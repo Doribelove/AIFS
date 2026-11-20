@@ -4,10 +4,15 @@
 
 namespace aifs::storage {
 
-void ReplicaManager::AddStore(std::shared_ptr<ChunkStore> store) {
-    if (store) {
-        stores_[store->node_id()] = std::move(store);
+common::Status ReplicaManager::AddStore(std::shared_ptr<ChunkStore> store) {
+    if (!store) {
+        return common::Status::InvalidArgument("store is null");
     }
+    const auto [it, inserted] = stores_.try_emplace(store->node_id(), store);
+    if (!inserted && it->second != store) {
+        return common::Status::AlreadyExists("node already registered: " + store->node_id());
+    }
+    return common::Status::Ok();
 }
 
 std::vector<std::string> ReplicaManager::NodeIds() const {

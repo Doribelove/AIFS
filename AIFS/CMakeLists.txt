@@ -48,6 +48,10 @@ if(AIFS_BUILD_TESTS)
     target_link_libraries(aifs_basic_flow_test PRIVATE aifs)
     add_test(NAME aifs_basic_flow_test COMMAND aifs_basic_flow_test)
 
+    add_executable(aifs_store_registration_test tests/store_registration_test.cpp)
+    target_link_libraries(aifs_store_registration_test PRIVATE aifs)
+    add_test(NAME aifs_store_registration_test COMMAND aifs_store_registration_test)
+
     add_executable(aifs_cache_test tests/cache_test.cpp)
     target_link_libraries(aifs_cache_test PRIVATE aifs)
     add_test(NAME aifs_cache_test COMMAND aifs_cache_test)
