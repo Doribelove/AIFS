@@ -13,7 +13,8 @@ namespace aifs::storage {
 
 class ReplicaManager {
 public:
-    void AddStore(std::shared_ptr<ChunkStore> store);
+    // Registering the same store again is safe. A different store must use its own node ID.
+    common::Status AddStore(std::shared_ptr<ChunkStore> store);
     std::vector<std::string> NodeIds() const;
 
     common::Status PutReplicas(
